@@ -1,22 +1,32 @@
-pipeline{
+pipeline {
     agent any
-    tools{
+    tools {
         maven 'maven'
     }
-    stages{
-        stage('CheckOut'){
-            steps{
-                git url:"https://github.com/DEEP-666/Dev_prac_4",branch:'main'
+    stages {
+        stage('CheckOut') {
+            steps {
+                git url: "https://github.com/DEEP-666/Dev_prac_4", branch: 'main'
             }
         }
-        stage('build'){
-            steps{
+        stage('Build') {
+            steps {
                 bat 'mvn clean package'
             }
         }
-        stage('test'){
-            steps{
+        stage('Test') {
+            steps {
                 bat 'mvn test'
+            }
+        }
+        stage('Run JAR') {
+            steps {
+                script {
+                    // Run the JAR file and capture output
+                    def output = bat(script: 'java -jar target/PolarisDevOps-1.0-SNAPSHOT.jar', returnStdout: true).trim()
+                    // Print the output to the console
+                    echo "Output from JAR: ${output}"
+                }
             }
         }
     }
