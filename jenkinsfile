@@ -22,10 +22,13 @@ pipeline {
         stage('Run JAR') {
             steps {
                 script {
-                    // Run the JAR file and capture output
-                    def output = bat(script: 'java -jar target/PolarisDevOps-1.0-SNAPSHOT.jar', returnStdout: true).trim()
-                    // Print the output to the console
-                    echo "Output from JAR: ${output}"
+                    def jarFile = "target/simple-java-project-1.0-SNAPSHOT.jar" // Corrected file name
+                    if (fileExists(jarFile)) {
+                        echo "JAR file found. Running..."
+                        bat "java -jar ${jarFile}"
+                    } else {
+                        error "JAR file not found! Build might have failed."
+                    }
                 }
             }
         }
